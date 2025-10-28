@@ -24,11 +24,7 @@ sentinel_workspace = {
   }
 }
 
-sentinel_connectors = {
-  "azure_active_directory" = {
-    enabled = true
-  }
-}
+sentinel_connectors = {}
 
 
 #azure_virtual_desktop = {
