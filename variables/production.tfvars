@@ -81,3 +81,50 @@ virtual_networks = {
     }
   }
 }
+#======================SENTINEL DATA CONNECTORS======================================
+
+sentinel_connectors = {
+  # CyberArk Connector
+  "cyberark-audit" = {
+    enabled                  = true
+    connector_type           = "CyberArk"
+    key_vault_name           = "y3-kv-coremgt-uks-0001"
+    key_vault_resource_group = "y3-rg-core-management-uksouth-0001"
+    endpoint                 = "https:/-CYBERARK-ENDPOINT.com"  # need to update
+
+    secrets = {
+      username = "cyberark-api-username"
+      password = "cyberark-api-password"
+    }
+
+    config = {
+      function_code_url = "https://aka.ms/sentinel-CyberArkEPV-functionapp"
+      function_sku      = "Y1"
+      python_version    = "3.9"
+      runtime           = "python"
+    }
+  }
+
+  # Mimecast Connector (Terraform-managed, different from manual!)
+  "mimecast-audit-tf" = {
+    enabled                  = true
+    connector_type           = "Mimecast"
+    key_vault_name           = "y3-kv-coremgt-uks-0001"
+    key_vault_resource_group = "y3-rg-core-management-uksouth-0001"
+    endpoint                 = "https://api.mimecast.com"
+
+    secrets = {
+      application_id  = "mimecast-audit-application-id"
+      application_key = "mimecast-audit-application-key"
+      access_key      = "mimecast-audit-access-key"
+      secret_key      = "mimecast-audit-secret-key"
+    }
+
+    config = {
+      function_code_url = "https://aka.ms/sentinel-MimecastAudit-functionapp"
+      function_sku      = "Y1"
+      python_version    = "3.9"
+      runtime           = "python"
+    }
+  }
+}
