@@ -70,6 +70,19 @@ variable "sentinel_workspace" {
     sku      = string
   }))
 }
+variable "sentinel_connectors" {
+  description = "Map of Sentinel data connectors"
+  type = map(object({
+    enabled                  = bool
+    connector_type           = string
+    key_vault_name           = optional(string)
+    key_vault_resource_group = optional(string)
+    endpoint                 = optional(string)
+    secrets                  = optional(map(string))
+    config                   = optional(map(any))
+  }))
+  default = {}
+}
 
 variable "azure_virtual_desktop" {
   type = map(object({
