@@ -143,10 +143,24 @@ module "sentinel_workspace" {
   environment_identifier = var.environment_identifier
   resource_group_name    = each.value.location == "UK South" ? module.resource_groups["rg-core-security-uksouth-0001"].resource_group_name : module.resource_groups["rg-core-security-ukwest-0001"].resource_group_name
   tags                   = merge(local.common_tags, local.extra_tags)
+  tenant_id                       = var.tenant_id
+  workspace_shared_key_secret_uri = try(azurerm_key_vault_secret.workspace_shared_key[each.key].id, null)
+  application_insights_key        = null
+  connectors                      = var.sentinel_connectors
 
   depends_on = [module.resource_groups]
 }
+#--------------- Store Workspace Key in Key Vault ---------------#
 
+resource "azurerm_key_vault_secret" "workspace_shared_key" {
+  for_each = var.sentinel_workspace
+
+  name         = "sentinel-workspace-shared-key-${each.key}"
+  value        = module.sentinel_workspace[each.key].log_analytics_workspace.primary_shared_key
+  key_vault_id = data.azurerm_key_vault.kv-mgmnt.id
+
+  depends_on = [module.sentinel_workspace]
+}
 #--------------- Azure Virtual Desktop ---------------#
 
 module "azure_virtual_desktop" {
